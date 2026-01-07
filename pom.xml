@@ -50,7 +50,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.4.1</version>
                 <configuration>
-                    <mainClass>game.core.App</mainClass>  <!-- Đổi thành full package + tên class có main, ví dụ com.example.Hello -->
+                    <mainClass>game.Main</mainClass>  <!-- Đổi thành full package + tên class có main, ví dụ com.example.Hello -->
                 </configuration>
             </plugin>
             <plugin>
