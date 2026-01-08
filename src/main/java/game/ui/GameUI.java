@@ -1,36 +1,52 @@
 package game.ui;
 
-import game.core.Character;
+import game.dto.ActionResult;
+import game.entity.Character;
+import java.util.List;
 
 public class GameUI {
 
-  public void showStatus(Character player, Character monster) {
-    System.out.printf(
+  public void showTitle() {
+    System.out.println(
       """
       ====================================
               TURN-BASED BATTLE
       ====================================
-      Player: %s
-      HP: %s
-
-      Monster: %s
-      HP: %s
-      """,
-      player.getName(),
-      renderHpBar(player),
-      monster.getName(),
-      renderHpBar(monster)
+      """
     );
   }
 
-  public void showMenu() {
+  public void showStatus(Character player, Character monster) {
+    System.out.printf(
+      """
+      Player: %s
+      HP: %s
+      MP: %s
+
+      Monster: %s
+      HP: %s
+      MP: %s
+      """,
+      player.getName(),
+      renderBar(player, player.getHp(), player.getMaxHP()),
+      renderBar(player, player.getMana(), player.getMaxMana()),
+      monster.getName(),
+      renderBar(monster, monster.getHp(), monster.getMaxHP()),
+      renderBar(monster, monster.getMana(), monster.getMaxMana())
+    );
+  }
+
+  public void showMenu(Character player) {
     System.out.printf(
       """
       ------------------------------------
       Choose action:
-      1. Attack
+      1. %s
+      2. %s
       ------------------------------------
-      """
+      """,
+      player.getGem(0).getName(),
+      player.getGem(1).getName()
     );
   }
 
@@ -38,15 +54,40 @@ public class GameUI {
     System.out.println(message);
   }
 
-  private String renderHpBar(Character c) {
+  public void showCombatLog(List<ActionResult> logs) {
+    for (ActionResult log : logs) {
+      printByType(log);
+    }
+  }
+
+  private void printByType(ActionResult log) {
+    switch (log.getType()) {
+      case DAMAGE:
+        System.out.println("> " + log.getMessage());
+        break;
+      case BURN:
+        System.out.println("🔥~ " + log.getMessage());
+        break;
+      case STUN:
+        System.out.println("! " + log.getMessage());
+        break;
+      case ERROR:
+        System.out.println("[!] " + log.getMessage());
+        break;
+      default:
+        System.out.println(log.getMessage());
+    }
+  }
+
+  private String renderBar(Character c, int current, int max) {
     int totalBars = 20;
-    int filledBars = (int) (((double) c.getHp() / c.getMaxHP()) * totalBars);
+    int filledBars = (int) (((double) current / max) * totalBars);
 
     StringBuilder bar = new StringBuilder("[");
     for (int i = 0; i < totalBars; i++) {
       bar.append(i < filledBars ? "█" : "░");
     }
-    bar.append("] ").append(c.getHp()).append("/").append(c.getMaxHP());
+    bar.append("] ").append(current).append("/").append(max);
 
     return bar.toString();
   }
