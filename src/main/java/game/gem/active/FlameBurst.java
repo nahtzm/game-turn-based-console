@@ -3,51 +3,46 @@ package game.gem.active;
 import game.dto.ActionMessage;
 import game.dto.ActionResult;
 import game.dto.ActionType;
-import game.effect.BurnEffect;
 import game.entity.Character;
 import game.gem.ActiveGem;
 import game.gem.SupportGem;
 import game.gem.support.Bigger;
-import game.gem.support.ManaBetter;
-import game.utils.RandomUtil;
 
-public class FireBallGem extends ActiveGem {
+public class FlameBurst extends ActiveGem {
 
-  private final double chanceBurn = 0.3;
-
-  public FireBallGem() {
-    super(20, 10, 0);
+  public FlameBurst() {
+    super(100, 30, 3);
     supportGems[0] = new Bigger();
-    supportGems[1] = new ManaBetter();
     applySupportGems();
   }
 
   @Override
   public String getName() {
-    return "Fire Ball";
+    return "Flame Burst";
   }
 
   @Override
   public String getDescription() {
-    return "Bắn một hỏa cầu gây sát thương và thiêu đốt mục tiêu.";
+    return "Gây bộc phát liệt diệm. Mạnh hơn nếu mục tiêu đang cháy.";
   }
 
   @Override
   public ActionResult execute(Character actor, Character target) {
-    if (!actor.engoughMana(manaAfterSupport)) {
+    if (!actor.engoughMana(getBaseManaCost())) {
       return new ActionResult(ActionType.ERROR, "You don't have enough mana.");
     }
-    target.takeDamage(damageAfterSupport);
-
-    if (RandomUtil.roll(chanceBurn)) {
-      target.addStatusEffect(new BurnEffect(2));
+    if (!this.canUse()) {
+      return new ActionResult(
+        ActionType.ERROR,
+        "You can't use this gem right now."
+      );
     }
-    actor.spendMana(manaAfterSupport);
+    target.takeDamage(baseDamage);
+    actor.spendMana(getBaseManaCost());
     onUse();
-
     return new ActionResult(
       ActionType.DAMAGE,
-      ActionMessage.fireball(
+      ActionMessage.flameburst(
         actor.getName(),
         target.getName(),
         damageAfterSupport

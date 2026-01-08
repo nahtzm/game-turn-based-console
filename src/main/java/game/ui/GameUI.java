@@ -2,6 +2,7 @@ package game.ui;
 
 import game.dto.ActionResult;
 import game.entity.Character;
+import game.utils.GameTime;
 import java.util.List;
 
 public class GameUI {
@@ -41,12 +42,14 @@ public class GameUI {
       """
       ------------------------------------
       Choose action:
-      1. %s
-      2. %s
+      1. %s (CD: %d)
+      2. %s (CD: %d)
       ------------------------------------
       """,
       player.getGem(0).getName(),
-      player.getGem(1).getName()
+      player.getGem(0).getCurrentCooldown(),
+      player.getGem(1).getName(),
+      player.getGem(1).getCurrentCooldown()
     );
   }
 
@@ -57,6 +60,7 @@ public class GameUI {
   public void showCombatLog(List<ActionResult> logs) {
     for (ActionResult log : logs) {
       printByType(log);
+      GameTime.waitMs(200);
     }
   }
 

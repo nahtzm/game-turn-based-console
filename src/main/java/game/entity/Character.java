@@ -11,15 +11,19 @@ public abstract class Character {
   protected String name;
   protected int hp;
   protected int maxHP;
-  protected int dame;
   protected int mana;
   protected int maxMana;
   protected int manaRegen;
   protected final ActiveGem[] activeGems = new ActiveGem[5];
   protected List<StatusEffect> statuses = new ArrayList<>();
 
-  public int getManaRegen() {
-    return manaRegen;
+  public Character(String name, int maxHp, int maxMana) {
+    this.name = name;
+    this.hp = maxHp;
+    this.maxHP = hp;
+    this.mana = maxMana;
+    this.maxMana = maxMana;
+    this.manaRegen = 10;
   }
 
   public ActiveGem[] getActiveGems() {
@@ -30,49 +34,39 @@ public abstract class Character {
     return statuses;
   }
 
-  public Character(String name, int maxHp, int dame, int mana) {
-    this.name = name;
-    this.hp = maxHp;
-    this.maxHP = hp;
-    this.dame = dame;
-    this.mana = mana;
-    this.maxMana = mana;
-    this.manaRegen = 10;
+  public String getName() {
+    return this.name;
   }
 
   public int getMaxHP() {
     return this.maxHP;
   }
 
-  public String getName() {
-    return this.name;
+  public int getMaxMana() {
+    return this.maxMana;
+  }
+
+  public int getManaRegen() {
+    return manaRegen;
   }
 
   public int getHp() {
     return this.hp;
   }
 
-  public int getDame() {
-    return this.dame;
-  }
-
   public int getMana() {
     return this.mana;
-  }
-
-  public int getMaxMana() {
-    return this.maxMana;
   }
 
   public boolean isAlive() {
     return this.hp > 0;
   }
 
-  public void takeDame(int dmg) {
+  public void takeDamage(int dmg) {
     this.hp = Math.max(0, this.hp - dmg);
   }
 
-  public void decreaseMana(int amount) {
+  public void spendMana(int amount) {
     this.mana -= amount;
     if (this.mana < 0) {
       mana = 0;
@@ -88,10 +82,6 @@ public abstract class Character {
 
   public boolean engoughMana(int cost) {
     return mana >= cost;
-  }
-
-  public boolean checkMana(ActiveGem gem) {
-    return engoughMana(gem.getManaCost());
   }
 
   public ActiveGem getGem(int slot) {

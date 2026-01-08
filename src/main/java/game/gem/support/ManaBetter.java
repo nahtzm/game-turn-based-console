@@ -18,7 +18,7 @@ public class ManaBetter extends SupportGem {
   @Override
   public void applyEffect(ActiveGem activeGem) {
     activeGem.setManaAfterSupport(
-      activeGem.getManaCost() > 10 ? activeGem.getManaCost() - 10 : 0
+      activeGem.getBaseManaCost() > 10 ? activeGem.getBaseManaCost() - 10 : 0
     );
   }
 }

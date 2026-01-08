@@ -64,6 +64,9 @@ public class GameEngine {
   private void startPhase(Character player, Character monster) {
     player.regenMana();
     monster.regenMana();
+    for (ActiveGem gem : player.getActiveGems()) {
+      if (gem != null) gem.reduceCooldown();
+    }
   }
 
   private void actionPhase(Character player, Character monster) {
@@ -76,7 +79,7 @@ public class GameEngine {
           actionPerformed = useGem(player.getGem(0), player, monster);
           break;
         case 2:
-          actionPerformed = useGem(player.getGem(0), player, monster);
+          actionPerformed = useGem(player.getGem(1), player, monster);
           break;
         case 0:
           ui.showMessage("Exiting game...");
@@ -91,7 +94,11 @@ public class GameEngine {
 
   private boolean useGem(ActiveGem gem, Character actor, Character target) {
     ActionResult result = gem.execute(actor, target);
-    combatLog.add(result);
+    if (result.getType() == ActionType.ERROR) {
+      ui.showMessage(result.getMessage());
+    } else {
+      combatLog.add(result);
+    }
     return result.getType() != ActionType.ERROR;
   }
 }

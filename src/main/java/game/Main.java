@@ -9,8 +9,8 @@ import game.ui.*;
 public class Main {
 
   public static void main(String[] args) {
-    Player player = new Player("nahtzm", 1000, 30, 50);
-    Monster monster = new Monster("Dragon", 300, 30, 1000);
+    Player player = new Player("nahtzm", 1000, 50);
+    Monster monster = new Monster("Dragon", 300, 1000);
 
     GameUI ui = new GameUI();
     Input input = new Input();
