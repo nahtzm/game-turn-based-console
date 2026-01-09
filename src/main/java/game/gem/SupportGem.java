@@ -1,12 +1,45 @@
 package game.gem;
 
-public abstract class SupportGem implements Gem {
+import game.entity.Character;
 
-  protected final GemType type = GemType.SUPPORT;
-
-  public GemType getType() {
-    return type;
+public interface SupportGem extends Gem {
+  default int modifyDuration(int baseDuration) {
+    return baseDuration;
   }
 
-  public abstract void applyEffect(ActiveGem activeGem);
+  default int addFlatDamage(int currentDamage) {
+    return currentDamage;
+  }
+
+  default double getIncreasedPercent() {
+    return 0.0;
+  }
+
+  default double getMoreMultiplier() {
+    return 1.0;
+  }
+
+  default int getExtraCooldown() {
+    return 0;
+  }
+
+  default int modifyManaCost(int baseManaCost) {
+    return baseManaCost;
+  }
+
+  default int applySpecialEffect(
+    int finalDamage,
+    Character target,
+    ActiveGem activeGem,
+    Character caster
+  ) {
+    return 0;
+  }
+
+  default boolean canApplyTo(ActiveGem activeGem) {
+    return true;
+  }
+
+  String getName();
+  String getDescription();
 }

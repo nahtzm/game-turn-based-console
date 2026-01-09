@@ -1,9 +1,13 @@
 package game.gem.support;
 
-import game.gem.ActiveGem;
 import game.gem.SupportGem;
 
-public class ManaBetter extends SupportGem {
+public class ManaBetter implements SupportGem {
+
+  // @Override
+  // public List<EffectType> getEffectTypes() {
+  //   return List.of(EffectType.MANA);
+  // }
 
   @Override
   public String getName() {
@@ -16,9 +20,7 @@ public class ManaBetter extends SupportGem {
   }
 
   @Override
-  public void applyEffect(ActiveGem activeGem) {
-    activeGem.setManaAfterSupport(
-      activeGem.getBaseManaCost() > 10 ? activeGem.getBaseManaCost() - 10 : 0
-    );
+  public int modifyManaCost(int baseManaCost) {
+    return baseManaCost > 10 ? baseManaCost - 10 : 0;
   }
 }

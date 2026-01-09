@@ -80,16 +80,45 @@ public abstract class Character {
     }
   }
 
-  public boolean engoughMana(int cost) {
+  public void setMaxHP(int maxHP) {
+    this.maxHP = maxHP;
+    this.hp = Math.min(this.hp, maxHP);
+  }
+
+  public boolean hasEnoughMana(int cost) {
     return mana >= cost;
+  }
+
+  public void heal(int amount) {
+    this.hp = Math.min(maxHP, this.hp + amount);
+  }
+
+  public void fullHeal() {
+    this.hp = maxHP;
+    this.mana = maxMana;
   }
 
   public ActiveGem getGem(int slot) {
     return (slot >= 0 && slot < 5) ? activeGems[slot] : null;
   }
 
+  public void equipGem(int slot, ActiveGem gem) {
+    if (slot >= 0 && slot < 5) {
+      activeGems[slot] = gem;
+    }
+  }
+
   public void addStatusEffect(StatusEffect status) {
     statuses.add(status);
+  }
+
+  public StatusEffect getStatusByName(String name) {
+    for (StatusEffect status : statuses) {
+      if (status.getName().equals(name)) {
+        return status;
+      }
+    }
+    return null;
   }
 
   public List<ActionResult> applyEffects() {

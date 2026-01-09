@@ -44,12 +44,16 @@ public class GameUI {
       Choose action:
       1. %s (CD: %d)
       2. %s (CD: %d)
+      3. %s (CD: %d)
+
       ------------------------------------
       """,
       player.getGem(0).getName(),
       player.getGem(0).getCurrentCooldown(),
       player.getGem(1).getName(),
-      player.getGem(1).getCurrentCooldown()
+      player.getGem(1).getCurrentCooldown(),
+      player.getGem(2).getName(),
+      player.getGem(2).getCurrentCooldown()
     );
   }
 

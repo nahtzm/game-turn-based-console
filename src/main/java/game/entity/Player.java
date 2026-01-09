@@ -8,7 +8,7 @@ public class Player extends Character {
     super(name, maxHp, maxMana);
     activeGems[0] = new FireBallGem();
     activeGems[1] = new FlameBurst();
-    activeGems[2] = null;
+    activeGems[2] = new BurningSeal();
     activeGems[3] = null;
     activeGems[4] = null;
   }

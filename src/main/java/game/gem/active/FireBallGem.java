@@ -4,63 +4,68 @@ import game.dto.ActionMessage;
 import game.dto.ActionResult;
 import game.dto.ActionType;
 import game.effect.BurnEffect;
+import game.effect.StatusEffect;
 import game.entity.Character;
 import game.gem.ActiveGem;
+import game.gem.GemTag;
 import game.gem.SupportGem;
-import game.gem.support.Bigger;
-import game.gem.support.ManaBetter;
+import game.gem.support.IntensifyFlame;
+import game.gem.support.LingeringEmber;
 import game.utils.RandomUtil;
 
 public class FireBallGem extends ActiveGem {
 
-  private final double chanceBurn = 0.3;
+  private double burnChance = 0.5;
+  private int baseBurnDuration = 2;
+  private int baseBurnDamage = 4;
+  private int calculatedBurnDuration;
 
   public FireBallGem() {
-    super(20, 10, 0);
-    supportGems[0] = new Bigger();
-    supportGems[1] = new ManaBetter();
-    applySupportGems();
+    super("Fire Ball", 10, 0, 0, GemTag.FIRE, GemTag.SPELL, GemTag.BURN);
+    supportGems[0] = new IntensifyFlame();
+    supportGems[1] = new LingeringEmber();
+    supportGems[2] = new LingeringEmber();
+
+    recalculateFinalStats();
   }
 
   @Override
-  public String getName() {
-    return "Fire Ball";
-  }
+  public void recalculateFinalStats() {
+    super.recalculateFinalStats();
 
-  @Override
-  public String getDescription() {
-    return "Bắn một hỏa cầu gây sát thương và thiêu đốt mục tiêu.";
-  }
-
-  @Override
-  public ActionResult execute(Character actor, Character target) {
-    if (!actor.engoughMana(manaAfterSupport)) {
-      return new ActionResult(ActionType.ERROR, "You don't have enough mana.");
+    int burnDuration = this.baseBurnDuration;
+    for (SupportGem s : supportGems) {
+      if (s != null) {
+        burnDuration = s.modifyDuration(burnDuration);
+      }
     }
-    target.takeDamage(damageAfterSupport);
+    this.calculatedBurnDuration = burnDuration;
+  }
 
-    if (RandomUtil.roll(chanceBurn)) {
-      target.addStatusEffect(new BurnEffect(2));
+  @Override
+  protected ActionResult execute(Character actor, Character target) {
+    int dmg = getDamage();
+    target.takeDamage(dmg);
+
+    if (RandomUtil.roll(burnChance)) {
+      StatusEffect existing = target.getStatusByName("Burn");
+      if (existing != null) {
+        existing.refresh(calculatedBurnDuration);
+      } else {
+        target.addStatusEffect(
+          new BurnEffect(baseBurnDamage, calculatedBurnDuration)
+        );
+      }
     }
-    actor.spendMana(manaAfterSupport);
-    onUse();
 
     return new ActionResult(
       ActionType.DAMAGE,
-      ActionMessage.fireball(
-        actor.getName(),
-        target.getName(),
-        damageAfterSupport
-      )
+      ActionMessage.fireball(actor.getName(), target.getName(), dmg)
     );
   }
 
   @Override
-  public void applySupportGems() {
-    for (SupportGem supportGem : supportGems) {
-      if (supportGem != null) {
-        supportGem.applyEffect(this);
-      }
-    }
+  public String getDescription() {
+    return "Hỏa Cầu gây sát thương và gây Thiêu Đốt";
   }
 }

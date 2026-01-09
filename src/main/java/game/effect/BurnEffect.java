@@ -7,17 +7,21 @@ import game.entity.Character;
 
 public class BurnEffect extends StatusEffect {
 
-  public BurnEffect(int duration) {
-    super(duration);
+  private int damagePerTurn;
+
+  public BurnEffect(int damagePerTurn, int duration) {
+    super("Burn", duration);
+    this.effectType = EffectType.BURN;
+    this.damagePerTurn = damagePerTurn;
   }
 
   @Override
   public ActionResult applyEffect(Character target) {
-    target.takeDamage(2);
+    target.takeDamage(damagePerTurn);
     reduceDuration();
     return new ActionResult(
       ActionType.BURN,
-      ActionMessage.burn(target.getName(), 2)
+      ActionMessage.burn(target.getName(), damagePerTurn, getDuration())
     );
   }
 }
