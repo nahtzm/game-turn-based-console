@@ -14,6 +14,8 @@ public abstract class StatusEffect {
     this.duration = duration;
   }
 
+  public abstract ActionResult applyEffect(Character target);
+
   public String getName() {
     return name;
   }
@@ -25,8 +27,6 @@ public abstract class StatusEffect {
   public int getDuration() {
     return duration;
   }
-
-  public abstract ActionResult applyEffect(Character target);
 
   public boolean isExpired() {
     return duration <= 0;

@@ -11,8 +11,13 @@ import game.gem.GemTag;
 public class BurningSeal extends ActiveGem {
 
   public BurningSeal() {
-    super("Burning Seal", 10, 5, 2, GemTag.FIRE);
+    super(10, 5, 2, GemTag.FIRE);
     recalculateFinalStats();
+  }
+
+  @Override
+  public String getName() {
+    return "Burning Seal";
   }
 
   @Override

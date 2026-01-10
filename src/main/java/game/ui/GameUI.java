@@ -1,5 +1,7 @@
 package game.ui;
 
+import static game.utils.AnsiColor.*;
+
 import game.dto.ActionResult;
 import game.entity.Character;
 import game.utils.GameTime;
@@ -29,11 +31,11 @@ public class GameUI {
       MP: %s
       """,
       player.getName(),
-      renderBar(player, player.getHp(), player.getMaxHP()),
-      renderBar(player, player.getMana(), player.getMaxMana()),
+      renderBar(player, player.getHp(), player.getMaxHP(), RED),
+      renderBar(player, player.getMana(), player.getMaxMana(), BLUE),
       monster.getName(),
-      renderBar(monster, monster.getHp(), monster.getMaxHP()),
-      renderBar(monster, monster.getMana(), monster.getMaxMana())
+      renderBar(monster, monster.getHp(), monster.getMaxHP(), RED),
+      renderBar(monster, monster.getMana(), monster.getMaxMana(), BLUE)
     );
   }
 
@@ -87,13 +89,13 @@ public class GameUI {
     }
   }
 
-  private String renderBar(Character c, int current, int max) {
+  private String renderBar(Character c, int current, int max, String color) {
     int totalBars = 20;
     int filledBars = (int) (((double) current / max) * totalBars);
 
     StringBuilder bar = new StringBuilder("[");
     for (int i = 0; i < totalBars; i++) {
-      bar.append(i < filledBars ? "█" : "░");
+      bar.append(i < filledBars ? color("█", color) : "░");
     }
     bar.append("] ").append(current).append("/").append(max);
 

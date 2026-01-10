@@ -3,20 +3,25 @@ package game.gem.active;
 import game.dto.ActionMessage;
 import game.dto.ActionResult;
 import game.dto.ActionType;
-import game.effect.EffectType;
 import game.effect.StatusEffect;
 import game.entity.Character;
 import game.gem.ActiveGem;
 import game.gem.support.IntensifyFlame;
 import game.gem.support.ManaBetter;
+import game.utils.GameLogger;
 
 public class FlameBurst extends ActiveGem {
 
   public FlameBurst() {
-    super("Flame Burst", 100, 30, 3);
+    super(100, 30, 3);
     supportGems[0] = new IntensifyFlame();
     supportGems[1] = new ManaBetter();
     recalculateFinalStats();
+  }
+
+  @Override
+  public String getName() {
+    return "Flame Burst";
   }
 
   @Override
@@ -36,11 +41,8 @@ public class FlameBurst extends ActiveGem {
   }
 
   private int checkTargetStatus(Character target, int dmg) {
-    for (StatusEffect statusEffect : target.getStatuses()) {
-      if (statusEffect.getEffectType() == EffectType.BURN) {
-        return dmg + 30;
-      }
-    }
-    return dmg;
+    StatusEffect burn = target.getStatusByName("Burn");
+    if (burn != null) GameLogger.effect("BURST THE BURN");
+    return burn != null ? dmg + 30 : dmg;
   }
 }

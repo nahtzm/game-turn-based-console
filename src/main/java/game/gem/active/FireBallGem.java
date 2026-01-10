@@ -11,6 +11,7 @@ import game.gem.GemTag;
 import game.gem.SupportGem;
 import game.gem.support.IntensifyFlame;
 import game.gem.support.LingeringEmber;
+import game.utils.GameLogger;
 import game.utils.RandomUtil;
 
 public class FireBallGem extends ActiveGem {
@@ -21,12 +22,21 @@ public class FireBallGem extends ActiveGem {
   private int calculatedBurnDuration;
 
   public FireBallGem() {
-    super("Fire Ball", 10, 0, 0, GemTag.FIRE, GemTag.SPELL, GemTag.BURN);
+    super(10, 0, 0, GemTag.FIRE, GemTag.SPELL, GemTag.BURN);
     supportGems[0] = new IntensifyFlame();
     supportGems[1] = new LingeringEmber();
-    supportGems[2] = new LingeringEmber();
 
     recalculateFinalStats();
+  }
+
+  @Override
+  public String getName() {
+    return "Fire Ball";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Hỏa Cầu gây sát thương và gây Thiêu Đốt";
   }
 
   @Override
@@ -48,7 +58,10 @@ public class FireBallGem extends ActiveGem {
     target.takeDamage(dmg);
 
     if (RandomUtil.roll(burnChance)) {
+      GameLogger.effect(target.getName() + " IS BURNED");
+
       StatusEffect existing = target.getStatusByName("Burn");
+
       if (existing != null) {
         existing.refresh(calculatedBurnDuration);
       } else {
@@ -62,10 +75,5 @@ public class FireBallGem extends ActiveGem {
       ActionType.DAMAGE,
       ActionMessage.fireball(actor.getName(), target.getName(), dmg)
     );
-  }
-
-  @Override
-  public String getDescription() {
-    return "Hỏa Cầu gây sát thương và gây Thiêu Đốt";
   }
 }

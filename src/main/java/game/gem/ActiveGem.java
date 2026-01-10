@@ -10,7 +10,6 @@ import java.util.Set;
 public abstract class ActiveGem implements Gem {
 
   // ================== BASE STATS ==================
-  protected final String name;
   protected final int baseDamage;
   protected final int baseManaCost;
   protected final int baseCooldown;
@@ -27,19 +26,15 @@ public abstract class ActiveGem implements Gem {
 
   // ================== CONSTRUCTOR ==================
   protected ActiveGem(
-    String name,
     int baseDamage,
     int baseManaCost,
     int baseCooldown,
     GemTag... tags
   ) {
-    this.name = name;
     this.baseDamage = baseDamage;
     this.baseManaCost = baseManaCost;
     this.baseCooldown = baseCooldown;
     this.tags.addAll(Arrays.asList(tags));
-
-    // recalculateFinalStats();
   }
 
   public void recalculateFinalStats() {
@@ -53,35 +48,25 @@ public abstract class ActiveGem implements Gem {
     for (SupportGem support : supportGems) {
       if (support == null) continue;
 
-      // Layer 2: Flat added
       damage = support.addFlatDamage(damage);
 
-      // Layer 3: % Increased
       increasedPercent += support.getIncreasedPercent();
 
-      // Layer 4: % More
       moreMultiplier *= support.getMoreMultiplier();
 
-      // Extra cooldown & mana
       extraCD += support.getExtraCooldown();
       mana = support.modifyManaCost(mana);
     }
 
-    // Apply increased + more
     damage = (int) (damage * (1 + increasedPercent / 100.0));
     damage = (int) (damage * moreMultiplier);
 
-    // Lưu final values
     this.calculatedDamage = Math.max(0, damage);
     this.calculatedManaCost = Math.max(0, mana);
     this.calculatedExtraCooldown = extraCD;
   }
 
   // ================== GETTER CHO COMBAT & UI ==================
-  @Override
-  public String getName() {
-    return name;
-  }
 
   public int getDamage() {
     return calculatedDamage;
@@ -135,13 +120,12 @@ public abstract class ActiveGem implements Gem {
   public ActionResult use(Character actor, Character target) {
     ActionResult check = canUse(actor);
     if (check.getType() == ActionType.ERROR) {
-      return check; // lỗi mana hoặc cooldown
+      return check;
     }
 
     actor.spendMana(getManaCost());
     startCooldown();
 
-    // Thực hiện effect chính của gem (subclass implement)
     return execute(actor, target);
   }
 

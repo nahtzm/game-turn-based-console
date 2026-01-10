@@ -4,11 +4,6 @@ import game.gem.SupportGem;
 
 public class ManaBetter implements SupportGem {
 
-  // @Override
-  // public List<EffectType> getEffectTypes() {
-  //   return List.of(EffectType.MANA);
-  // }
-
   @Override
   public String getName() {
     return "Mana Better";

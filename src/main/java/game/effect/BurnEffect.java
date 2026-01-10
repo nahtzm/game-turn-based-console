@@ -16,12 +16,12 @@ public class BurnEffect extends StatusEffect {
   }
 
   @Override
-  public ActionResult applyEffect(Character target) {
-    target.takeDamage(damagePerTurn);
+  public ActionResult applyEffect(Character owner) {
+    owner.takeDamage(damagePerTurn);
     reduceDuration();
     return new ActionResult(
       ActionType.BURN,
-      ActionMessage.burn(target.getName(), damagePerTurn, getDuration())
+      ActionMessage.burn(owner.getName(), damagePerTurn, getDuration())
     );
   }
 }
